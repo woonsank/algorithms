@@ -39,7 +39,7 @@ public class Graph {
 
     // Finds if more flow can be sent from s to t.
     // Also assigns levels to nodes.
-    public boolean BFS(int s, int t) {
+    public boolean doBFS(int s, int t) {
         for (int i = 0; i < n; i++)
             level[i] = -1;
 
@@ -113,7 +113,7 @@ public class Graph {
     }
 
     // Returns maximum flow in graph
-    public int DinicMaxflow(int s, int t) {
+    public int computeDinicMaxflow(int s, int t) {
         // Corner case
         if (s == t)
             return -1;
@@ -122,7 +122,7 @@ public class Graph {
 
         // Augment the flow while there is path
         // from source to sink
-        while (BFS(s, t) == true) {
+        while (doBFS(s, t) == true) {
             // store how many edges are visited
             // from V { 0 to V }
             int[] start = new int[n + 1];
@@ -165,7 +165,7 @@ public class Graph {
          * 2, 2 ); g.addEdge(2, 4, 9 ); g.addEdge(3, 5, 10 ); g.addEdge(4, 3, 6 ); g.addEdge(4, 5, 10 );
          */
 
-        System.out.println("Maximum flow " + g.DinicMaxflow(0, 5));
+        System.out.println("Maximum flow " + g.computeDinicMaxflow(0, 5));
     }
 }
 
