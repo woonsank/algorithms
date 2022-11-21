@@ -1,8 +1,8 @@
 /*
- * Converted the CPP code, found in https://www.geeksforgeeks.org/dinics-algorithm-maximum-flow/
+ * Converted the CPP code, originally found in https://www.geeksforgeeks.org/dinics-algorithm-maximum-flow/,
  * to Java code.
  * 
- * Execute `mvn exec:java -Dexec.mainClass=org.example.algorithms.networkflow.dinic.Graph`.
+ * Execute `mvn compile exec:java -Dexec.mainClass=org.example.algorithms.networkflow.dinic.Graph`.
  */
 package org.example.algorithms.networkflow.dinic;
 
@@ -52,8 +52,7 @@ public class Graph {
         q.add(s);
 
         while (!q.isEmpty()) {
-            int u = q.peek();
-            q.remove();
+            int u = q.poll();
             for (Edge e : adj[u]) {
                 if (level[e.v] < 0 && e.flow < e.capacity) {
                     // Level of current vertex is,
