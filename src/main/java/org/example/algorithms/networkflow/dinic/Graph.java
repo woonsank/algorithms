@@ -91,19 +91,19 @@ public class Graph {
 
             if (level[e.v] == level[u] + 1 && e.flow < e.capacity) {
                 // find minimum flow from u to t
-                int curr_flow = Math.min(flow, e.capacity - e.flow);
+                int currentFlow = Math.min(flow, e.capacity - e.flow);
 
-                int temp_flow = sendFlow(e.v, curr_flow, t, start);
+                int tempFlow = sendFlow(e.v, currentFlow, t, start);
 
                 // flow is greater than zero
-                if (temp_flow > 0) {
+                if (tempFlow > 0) {
                     // add flow to current edge
-                    e.flow += temp_flow;
+                    e.flow += tempFlow;
 
                     // subtract flow from reverse edge
                     // of current edge
-                    adj[e.v].get(e.rev).flow -= temp_flow;
-                    return temp_flow;
+                    adj[e.v].get(e.rev).flow -= tempFlow;
+                    return tempFlow;
                 }
             }
         }
