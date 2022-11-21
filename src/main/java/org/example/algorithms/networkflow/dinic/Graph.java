@@ -1,6 +1,8 @@
 /*
  * Converted the CPP code, found in https://www.geeksforgeeks.org/dinics-algorithm-maximum-flow/
  * to Java code.
+ * 
+ * Execute `mvn exec:java -Dexec.mainClass=org.example.algorithms.networkflow.dinic.Graph`.
  */
 package org.example.algorithms.networkflow.dinic;
 
@@ -8,37 +10,17 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Vector;
 
-class Edge {
-    Edge(int v, int flow, int C, int rev) {
-        this.v = v;
-        this.flow = flow;
-        this.C = C;
-        this.rev = rev;
-    }
-
-    int v; // Vertex v (or "to" vertex)
-           // of a directed edge u-v. "From"
-           // vertex u can be obtained using
-           // index in adjacent array.
-
-    int flow; // flow of data in edge
-
-    int C; // capacity
-
-    int rev; // To store index of reverse
-             // edge in adjacency list so that
-             // we can quickly find it.
-}
-
 // Residual Graph
 public class Graph {
+
     private int V; // number of vertex
     private int[] level; // stores level of a node
     private Vector<Edge>[] adj;
 
     public Graph(int V) {
         adj = new Vector[V];
-        for (int i = 0; i < V; i++) adj[i] = new Vector<Edge>();
+        for (int i = 0; i < V; i++)
+            adj[i] = new Vector<Edge>();
         this.V = V;
         level = new int[V];
     }
@@ -73,7 +55,7 @@ public class Graph {
             int u = q.peek();
             q.remove();
             for (Edge e : adj[u]) {
-                if (level[e.v] < 0 && e.flow < e.C) {
+                if (level[e.v] < 0 && e.flow < e.capacity) {
                     // Level of current vertex is,
                     // level of parent + 1
                     level[e.v] = level[u] + 1;
@@ -108,9 +90,9 @@ public class Graph {
             // Pick next edge from adjacency list of u
             Edge e = adj[u].get(start[u]);
 
-            if (level[e.v] == level[u] + 1 && e.flow < e.C) {
+            if (level[e.v] == level[u] + 1 && e.flow < e.capacity) {
                 // find minimum flow from u to t
-                int curr_flow = Math.min(flow, e.C - e.flow);
+                int curr_flow = Math.min(flow, e.capacity - e.flow);
 
                 int temp_flow = sendFlow(e.v, curr_flow, t, start);
 
@@ -175,28 +157,37 @@ public class Graph {
         g.addEdge(4, 5, 4);
 
         // next exmp
-        /*g.addEdge(0, 1, 3 );
-          g.addEdge(0, 2, 7 ) ;
-          g.addEdge(1, 3, 9);
-          g.addEdge(1, 4, 9 );
-          g.addEdge(2, 1, 9 );
-          g.addEdge(2, 4, 9);
-          g.addEdge(2, 5, 4);
-          g.addEdge(3, 5, 3);
-          g.addEdge(4, 5, 7 );
-          g.addEdge(0, 4, 10);
-     
-         // next exp
-         g.addEdge(0, 1, 10);
-         g.addEdge(0, 2, 10);
-         g.addEdge(1, 3, 4 );
-         g.addEdge(1, 4, 8 );
-         g.addEdge(1, 2, 2 );
-         g.addEdge(2, 4, 9 );
-         g.addEdge(3, 5, 10 );
-         g.addEdge(4, 3, 6 );
-         g.addEdge(4, 5, 10 ); */
+        /*
+         * g.addEdge(0, 1, 3 ); g.addEdge(0, 2, 7 ) ; g.addEdge(1, 3, 9); g.addEdge(1, 4, 9 ); g.addEdge(2, 1, 9 );
+         * g.addEdge(2, 4, 9); g.addEdge(2, 5, 4); g.addEdge(3, 5, 3); g.addEdge(4, 5, 7 ); g.addEdge(0, 4, 10);
+         * 
+         * // next exp g.addEdge(0, 1, 10); g.addEdge(0, 2, 10); g.addEdge(1, 3, 4 ); g.addEdge(1, 4, 8 ); g.addEdge(1,
+         * 2, 2 ); g.addEdge(2, 4, 9 ); g.addEdge(3, 5, 10 ); g.addEdge(4, 3, 6 ); g.addEdge(4, 5, 10 );
+         */
 
         System.out.println("Maximum flow " + g.DinicMaxflow(0, 5));
     }
+}
+
+class Edge {
+
+    Edge(int v, int flow, int capacity, int rev) {
+        this.v = v;
+        this.flow = flow;
+        this.capacity = capacity;
+        this.rev = rev;
+    }
+
+    int v; // Vertex v (or "to" vertex)
+           // of a directed edge u-v. "From"
+           // vertex u can be obtained using
+           // index in adjacent array.
+
+    int flow; // flow of data in edge
+
+    int capacity; // capacity
+
+    int rev; // To store index of reverse
+             // edge in adjacency list so that
+             // we can quickly find it.
 }
