@@ -19,8 +19,9 @@ public class Graph {
 
     public Graph(int n) {
         adj = new Vector[n];
-        for (int i = 0; i < n; i++)
+        for (int i = 0; i < n; i++) {
             adj[i] = new Vector<Edge>();
+        }
         this.n = n;
         level = new int[n];
     }
@@ -29,10 +30,8 @@ public class Graph {
     public void addEdge(int u, int v, int C) {
         // Forward edge : 0 flow and C capacity
         Edge a = new Edge(v, 0, C, (int) adj[v].size());
-
         // Back edge : 0 flow and 0 capacity
         Edge b = new Edge(u, 0, 0, (int) adj[u].size());
-
         adj[u].add(a);
         adj[v].add(b); // reverse edge
     }
@@ -40,8 +39,9 @@ public class Graph {
     // Finds if more flow can be sent from s to t.
     // Also assigns levels to nodes.
     public boolean doBFS(int s, int t) {
-        for (int i = 0; i < n; i++)
+        for (int i = 0; i < n; i++) {
             level[i] = -1;
+        }
 
         level[s] = 0; // Level of source vertex
 
@@ -58,7 +58,6 @@ public class Graph {
                     // Level of current vertex is,
                     // level of parent + 1
                     level[e.v] = level[u] + 1;
-
                     q.add(e.v);
                 }
             }
@@ -81,8 +80,9 @@ public class Graph {
     // t : Sink
     public int sendFlow(int u, int flow, int t, int start[]) {
         // Sink reached
-        if (u == t)
+        if (u == t) {
             return flow;
+        }
 
         // Traverse all adjacent edges one -by - one.
         for (; start[u] < adj[u].size(); start[u]++) {
@@ -92,14 +92,12 @@ public class Graph {
             if (level[e.v] == level[u] + 1 && e.flow < e.capacity) {
                 // find minimum flow from u to t
                 int currentFlow = Math.min(flow, e.capacity - e.flow);
-
                 int tempFlow = sendFlow(e.v, currentFlow, t, start);
 
                 // flow is greater than zero
                 if (tempFlow > 0) {
                     // add flow to current edge
                     e.flow += tempFlow;
-
                     // subtract flow from reverse edge
                     // of current edge
                     adj[e.v].get(e.rev).flow -= tempFlow;
@@ -114,8 +112,9 @@ public class Graph {
     // Returns maximum flow in graph
     public int computeDinicMaxflow(int s, int t) {
         // Corner case
-        if (s == t)
+        if (s == t) {
             return -1;
+        }
 
         int total = 0; // Initialize result
 
@@ -128,8 +127,8 @@ public class Graph {
 
             // while flow is not zero in graph from S to D
             int flow = sendFlow(s, Integer.MAX_VALUE, t, start);
-            while (flow > 0) {
 
+            while (flow > 0) {
                 // Add path flow to overall flow
                 total += flow;
                 flow = sendFlow(s, Integer.MAX_VALUE, t, start);
@@ -138,7 +137,6 @@ public class Graph {
 
         // return maximum flow
         return total;
-
     }
 
     // Driver Code
