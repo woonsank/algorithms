@@ -13,16 +13,16 @@ import java.util.Vector;
 // Residual Graph
 public class Graph {
 
-    private int V; // number of vertex
+    private int n; // number of vertex
     private int[] level; // stores level of a node
     private Vector<Edge>[] adj;
 
-    public Graph(int V) {
-        adj = new Vector[V];
-        for (int i = 0; i < V; i++)
+    public Graph(int n) {
+        adj = new Vector[n];
+        for (int i = 0; i < n; i++)
             adj[i] = new Vector<Edge>();
-        this.V = V;
-        level = new int[V];
+        this.n = n;
+        level = new int[n];
     }
 
     // add edge to the graph
@@ -40,7 +40,7 @@ public class Graph {
     // Finds if more flow can be sent from s to t.
     // Also assigns levels to nodes.
     public boolean BFS(int s, int t) {
-        for (int i = 0; i < V; i++)
+        for (int i = 0; i < n; i++)
             level[i] = -1;
 
         level[s] = 0; // Level of source vertex
@@ -125,7 +125,7 @@ public class Graph {
         while (BFS(s, t) == true) {
             // store how many edges are visited
             // from V { 0 to V }
-            int[] start = new int[V + 1];
+            int[] start = new int[n + 1];
 
             // while flow is not zero in graph from S to D
             int flow = sendFlow(s, Integer.MAX_VALUE, t, start);
