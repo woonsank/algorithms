@@ -1,5 +1,13 @@
 /*
- * How to test? Run `mvn test -Dtest=DinicGraphTest`.
+ * NOTICE: This class was converted to a Java implementation from the C++ source
+ *         originally found in https://www.geeksforgeeks.org/dinics-algorithm-maximum-flow/,
+ *         with the following minor improvements:
+ *           - convert the original C++ code to Java code ofc.
+ *           - move the driver main function to its dedicated JUnit test code.
+ *           - add the test cases with presentation purpose graph diagrams in the src/test/resources/...
+ *           - cleanups mostly about naming and following popular Java coding style conventions.
+ * 
+ * HOW TO TEST? Run `mvn test -Dtest=DinicGraphTest`.
  */
 package org.example.algorithms.networkflow.dinic;
 
