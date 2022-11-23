@@ -1,8 +1,5 @@
 /*
- * Converted the CPP code, originally found in https://www.geeksforgeeks.org/dinics-algorithm-maximum-flow/,
- * to Java code.
- * 
- * Execute `mvn compile exec:java -Dexec.mainClass=org.example.algorithms.networkflow.dinic.Graph`.
+ * How to test? Run `mvn test -Dtest=DinicGraphTest`.
  */
 package org.example.algorithms.networkflow.dinic;
 
@@ -11,18 +8,22 @@ import java.util.Queue;
 import java.util.Vector;
 
 // Residual Graph
-public class Graph {
+public class DinicGraph {
 
     private int n; // number of vertex
+    private int s; // number of the source vertex
+    private int t; // number of the sink vertex
     private int[] level; // stores level of a node
     private Vector<Edge>[] adj;
 
-    public Graph(int n) {
+    public DinicGraph(int n, int s, int t) {
         adj = new Vector[n];
         for (int i = 0; i < n; i++) {
             adj[i] = new Vector<Edge>();
         }
         this.n = n;
+        this.s = s;
+        this.t = t;
         level = new int[n];
     }
 
@@ -77,8 +78,7 @@ public class Graph {
     // start[i] stores count of edges explored
     // from i.
     // u : Current vertex
-    // t : Sink
-    public int sendFlow(int u, int flow, int t, int start[]) {
+    public int sendFlow(int u, int flow, int start[]) {
         // Sink reached
         if (u == t) {
             return flow;
@@ -92,7 +92,7 @@ public class Graph {
             if (level[e.v] == level[u] + 1 && e.flow < e.capacity) {
                 // find minimum flow from u to t
                 int currentFlow = Math.min(flow, e.capacity - e.flow);
-                int tempFlow = sendFlow(e.v, currentFlow, t, start);
+                int tempFlow = sendFlow(e.v, currentFlow, start);
 
                 // flow is greater than zero
                 if (tempFlow > 0) {
@@ -110,7 +110,7 @@ public class Graph {
     }
 
     // Returns maximum flow in graph
-    public int computeDinicMaxflow(int s, int t) {
+    public int computeMaxFlow() {
         // Corner case
         if (s == t) {
             return -1;
@@ -126,12 +126,12 @@ public class Graph {
             int[] start = new int[n + 1];
 
             // while flow is not zero in graph from S to D
-            int flow = sendFlow(s, Integer.MAX_VALUE, t, start);
+            int flow = sendFlow(s, Integer.MAX_VALUE, start);
 
             while (flow > 0) {
                 // Add path flow to overall flow
                 total += flow;
-                flow = sendFlow(s, Integer.MAX_VALUE, t, start);
+                flow = sendFlow(s, Integer.MAX_VALUE, start);
             }
         }
 
@@ -139,52 +139,43 @@ public class Graph {
         return total;
     }
 
-    // Driver Code
-    public static void main(String[] args) {
-        Graph g = new Graph(6);
-        g.addEdge(0, 1, 16);
-        g.addEdge(0, 2, 13);
-        g.addEdge(1, 2, 10);
-        g.addEdge(1, 3, 12);
-        g.addEdge(2, 1, 4);
-        g.addEdge(2, 4, 14);
-        g.addEdge(3, 2, 9);
-        g.addEdge(3, 5, 20);
-        g.addEdge(4, 3, 7);
-        g.addEdge(4, 5, 4);
-
-        // next exmp
-        /*
-         * g.addEdge(0, 1, 3 ); g.addEdge(0, 2, 7 ) ; g.addEdge(1, 3, 9); g.addEdge(1, 4, 9 ); g.addEdge(2, 1, 9 );
-         * g.addEdge(2, 4, 9); g.addEdge(2, 5, 4); g.addEdge(3, 5, 3); g.addEdge(4, 5, 7 ); g.addEdge(0, 4, 10);
-         * 
-         * // next exp g.addEdge(0, 1, 10); g.addEdge(0, 2, 10); g.addEdge(1, 3, 4 ); g.addEdge(1, 4, 8 ); g.addEdge(1,
-         * 2, 2 ); g.addEdge(2, 4, 9 ); g.addEdge(3, 5, 10 ); g.addEdge(4, 3, 6 ); g.addEdge(4, 5, 10 );
-         */
-
-        System.out.println("Maximum flow " + g.computeDinicMaxflow(0, 5));
-    }
-}
-
-class Edge {
-
-    Edge(int v, int flow, int capacity, int rev) {
-        this.v = v;
-        this.flow = flow;
-        this.capacity = capacity;
-        this.rev = rev;
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder(
+                "DinicGraph (n=" + n + ", source=" + s + ", sink=" + t + ") with arcs:");
+        for (int i = 0; i < n; i++) {
+            for (Edge edge : adj[i]) {
+                if (edge.capacity > 0) {
+                    sb.append("\n\t").append(i)
+                            .append(" -> ")
+                            .append(edge.v)
+                            .append(" (" + Math.max(0, edge.flow) + "/" + edge.capacity + ")");
+                }
+            }
+        }
+        return sb.toString();
     }
 
-    int v; // Vertex v (or "to" vertex)
-           // of a directed edge u-v. "From"
-           // vertex u can be obtained using
-           // index in adjacent array.
+    class Edge {
 
-    int flow; // flow of data in edge
+        Edge(int v, int flow, int capacity, int rev) {
+            this.v = v;
+            this.flow = flow;
+            this.capacity = capacity;
+            this.rev = rev;
+        }
 
-    int capacity; // capacity
+        int v; // Vertex v (or "to" vertex)
+               // of a directed edge u-v. "From"
+               // vertex u can be obtained using
+               // index in adjacent array.
 
-    int rev; // To store index of reverse
-             // edge in adjacency list so that
-             // we can quickly find it.
+        int flow; // flow of data in edge
+
+        int capacity; // capacity
+
+        int rev; // To store index of reverse
+                 // edge in adjacency list so that
+                 // we can quickly find it.
+    }
 }
