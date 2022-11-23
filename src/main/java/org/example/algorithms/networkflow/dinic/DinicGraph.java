@@ -15,7 +15,9 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Vector;
 
-// Residual Graph
+/**
+ * Residual/layered graph in Dinic's algorithm.
+ */
 public class DinicGraph {
 
     private int n; // number of vertex
@@ -24,6 +26,12 @@ public class DinicGraph {
     private int[] level; // stores level of a node
     private Vector<Edge>[] adj;
 
+    /**
+     * Constructor.
+     * @param n number of vertex
+     * @param s number of the source vertex
+     * @param t number of the sink vertex
+     */
     public DinicGraph(int n, int s, int t) {
         adj = new Vector[n];
         for (int i = 0; i < n; i++) {
@@ -35,19 +43,29 @@ public class DinicGraph {
         level = new int[n];
     }
 
-    // add edge to the graph
-    public void addEdge(int u, int v, int C) {
+    /**
+     * add edge to the graph
+     * @param u the number of vertex incident with the tail of the edge
+     * @param v the number of vertex incident with the head of the edge
+     * @param capacity the capacity of the edge
+     */
+    public void addEdge(int u, int v, int capacity) {
         // Forward edge : 0 flow and C capacity
-        Edge a = new Edge(v, 0, C, (int) adj[v].size());
+        Edge a = new Edge(v, 0, capacity, (int) adj[v].size());
         // Back edge : 0 flow and 0 capacity
         Edge b = new Edge(u, 0, 0, (int) adj[u].size());
         adj[u].add(a);
         adj[v].add(b); // reverse edge
     }
 
-    // Finds if more flow can be sent from s to t.
-    // Also assigns levels to nodes.
-    public boolean doBFS(int s, int t) {
+    /**
+     * Update the levels on each node by BFS and finds if more flow can be sent from s to t,
+     * and return {@code true} if more flow can be sent from {@code s} to {@code t}.
+     * @param s number of the source vertex
+     * @param t number of the sink vertex
+     * @return {@code true} if more flow can be sent from {@code s} to {@code t}
+     */
+    public boolean updateLevelsByBFS(int s, int t) {
         for (int i = 0; i < n; i++) {
             level[i] = -1;
         }
@@ -77,16 +95,17 @@ public class DinicGraph {
         return level[t] < 0 ? false : true;
     }
 
-    // A DFS based function to send flow after BFS has
-    // figured out that there is a possible flow and
-    // constructed levels. This function called multiple
-    // times for a single call of BFS.
-    // flow : Current flow send by parent function call
-    // start[] : To keep track of next edge to be explored.
-    // start[i] stores count of edges explored
-    // from i.
-    // u : Current vertex
-    public int sendFlow(int u, int flow, int start[]) {
+    /**
+     * A DFS based function to send flow after BFS has
+     * figured out that there is a possible flow and
+     * constructed levels. This function called multiple
+     * times for a single call of BFS.
+     * @param u current vertex
+     * @param flow current flow send by parent function call
+     * @param start to keep track of next edge to be explored from {@code i}
+     * @return the flow through the s-t path
+     */
+    public int sendFlowByDFS(int u, int flow, int start[]) {
         // Sink reached
         if (u == t) {
             return flow;
@@ -100,7 +119,7 @@ public class DinicGraph {
             if (level[e.v] == level[u] + 1 && e.flow < e.capacity) {
                 // find minimum flow from u to t
                 int currentFlow = Math.min(flow, e.capacity - e.flow);
-                int tempFlow = sendFlow(e.v, currentFlow, start);
+                int tempFlow = sendFlowByDFS(e.v, currentFlow, start);
 
                 // flow is greater than zero
                 if (tempFlow > 0) {
@@ -117,7 +136,10 @@ public class DinicGraph {
         return 0;
     }
 
-    // Returns maximum flow in graph
+    /**
+     * Returns maximum flow in graph
+     * @return maximum flow in graph
+     */
     public int computeMaxFlow() {
         // Corner case
         if (s == t) {
@@ -128,18 +150,18 @@ public class DinicGraph {
 
         // Augment the flow while there is path
         // from source to sink
-        while (doBFS(s, t) == true) {
+        while (updateLevelsByBFS(s, t) == true) {
             // store how many edges are visited
             // from V { 0 to V }
             int[] start = new int[n + 1];
 
             // while flow is not zero in graph from S to D
-            int flow = sendFlow(s, Integer.MAX_VALUE, start);
+            int flow = sendFlowByDFS(s, Integer.MAX_VALUE, start);
 
             while (flow > 0) {
                 // Add path flow to overall flow
                 total += flow;
-                flow = sendFlow(s, Integer.MAX_VALUE, start);
+                flow = sendFlowByDFS(s, Integer.MAX_VALUE, start);
             }
         }
 
