@@ -121,17 +121,17 @@ public class DinicGraph {
 
             if (level[e.v] == level[u] + 1 && e.flow < e.capacity) {
                 // find minimum flow from u to t
-                int curEdgeFlow = Math.min(flow, e.capacity - e.flow);
-                int availEdgeFlow = sendFlowByDFS(e.v, curEdgeFlow, edgeIndexes);
+                int curAvailFlow = Math.min(flow, e.capacity - e.flow);
+                int extraFlow = sendFlowByDFS(e.v, curAvailFlow, edgeIndexes);
 
                 // flow is greater than zero
-                if (availEdgeFlow > 0) {
+                if (extraFlow > 0) {
                     // add flow to current edge
-                    e.flow += availEdgeFlow;
+                    e.flow += extraFlow;
                     // subtract flow from reverse edge
                     // of current edge
-                    adj[e.v].get(e.reverseEdgeIndex).flow -= availEdgeFlow;
-                    return availEdgeFlow;
+                    adj[e.v].get(e.reverseEdgeIndex).flow -= extraFlow;
+                    return extraFlow;
                 }
             }
         }
