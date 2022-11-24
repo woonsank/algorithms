@@ -155,14 +155,11 @@ public class DinicGraph {
         while (resetLayerLevelsByBFS(s, t) == true) {
             // store how many edges are visited from v { 0 to d(v) }
             int[] edgeIndexes = new int[n + 1];
-
-            // while flow is not zero in graph from S to D
-            int flow = sendFlowByDFS(s, Integer.MAX_VALUE, edgeIndexes);
-
-            while (flow > 0) {
+            int flow;
+            // while flow is not zero in graph from source to sink
+            while ((flow = sendFlowByDFS(s, Integer.MAX_VALUE, edgeIndexes)) > 0) {
                 // Add path flow to overall flow
                 total += flow;
-                flow = sendFlowByDFS(s, Integer.MAX_VALUE, edgeIndexes);
             }
         }
 
