@@ -63,7 +63,7 @@ public class DinicGraph {
      * sent from s to t, and return {@code true} if more flow can be sent from {@code s} to {@code t},
      * or {@code false} otherwise.
      * <P>
-     * Note that the {@code level} will contain only _available_ nodes.
+     * Note that the {@code level} will contain only _admissable_ nodes.
      * @param s number of the source vertex
      * @param t number of the sink vertex
      * @return {@code true} if more flow can be sent from {@code s} to {@code t}, or {@code false} otherwise
