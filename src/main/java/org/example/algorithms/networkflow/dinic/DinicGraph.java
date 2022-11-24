@@ -51,9 +51,9 @@ public class DinicGraph {
      */
     public void addEdge(int u, int v, int capacity) {
         // Forward edge : 0 flow and C capacity
-        Edge a = new Edge(v, 0, capacity, (int) adj[v].size());
+        Edge a = new Edge(v, 0, capacity, adj[v].size());
         // Back edge : 0 flow and 0 capacity
-        Edge b = new Edge(u, 0, 0, (int) adj[u].size());
+        Edge b = new Edge(u, 0, 0, adj[u].size());
         adj[u].add(a);
         adj[v].add(b); // reverse edge
     }
@@ -130,7 +130,7 @@ public class DinicGraph {
                     e.flow += tempFlow;
                     // subtract flow from reverse edge
                     // of current edge
-                    adj[e.v].get(e.rev).flow -= tempFlow;
+                    adj[e.v].get(e.reverseEdgeIndex).flow -= tempFlow;
                     return tempFlow;
                 }
             }
@@ -189,11 +189,11 @@ public class DinicGraph {
 
     class Edge {
 
-        Edge(int v, int flow, int capacity, int rev) {
+        Edge(int v, int flow, int capacity, int reverseEdgeIndex) {
             this.v = v;
             this.flow = flow;
             this.capacity = capacity;
-            this.rev = rev;
+            this.reverseEdgeIndex = reverseEdgeIndex;
         }
 
         int v; // Vertex v (or "to" vertex)
@@ -205,8 +205,8 @@ public class DinicGraph {
 
         int capacity; // capacity
 
-        int rev; // To store index of reverse
-                 // edge in adjacency list so that
-                 // we can quickly find it.
+        int reverseEdgeIndex; // To store index of reverse
+                              // edge in adjacency list so that
+                              // we can quickly find it.
     }
 }
