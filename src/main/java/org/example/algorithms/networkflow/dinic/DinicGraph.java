@@ -59,14 +59,16 @@ public class DinicGraph {
     }
 
     /**
-     * Update the levels on each node by BFS and finds if more flow can be sent from s to t,
-     * and return {@code true} if more flow can be sent from {@code s} to {@code t},
+     * Reset the levels of the layers on each node by BFS and check whether or not more flow can be
+     * sent from s to t, and return {@code true} if more flow can be sent from {@code s} to {@code t},
      * or {@code false} otherwise.
+     * <P>
+     * Note that the {@code level} will contain only _available_ nodes.
      * @param s number of the source vertex
      * @param t number of the sink vertex
      * @return {@code true} if more flow can be sent from {@code s} to {@code t}, or {@code false} otherwise
      */
-    public boolean updateLevelsByBFS(int s, int t) {
+    public boolean resetLayerLevelsByBFS(int s, int t) {
         for (int i = 0; i < n; i++) {
             level[i] = -1;
         }
@@ -149,9 +151,8 @@ public class DinicGraph {
 
         int total = 0; // Initialize result
 
-        // Augment the flow while there is path
-        // from source to sink
-        while (updateLevelsByBFS(s, t) == true) {
+        // Augment the flow while there is path from source to sink
+        while (resetLayerLevelsByBFS(s, t) == true) {
             // store how many edges are visited
             // from V { 0 to V }
             int[] start = new int[n + 1];
