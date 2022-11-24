@@ -114,7 +114,7 @@ public class DinicGraph {
             return flow;
         }
 
-        // Traverse all adjacent edges one -by - one.
+        // Traverse all adjacent edges one by one.
         for (; edgeIndexes[u] < adj[u].size(); edgeIndexes[u]++) {
             // Pick next edge from adjacency list of u
             Edge e = adj[u].get(edgeIndexes[u]);
