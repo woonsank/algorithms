@@ -105,24 +105,24 @@ public class DinicGraph {
      * times for a single call of BFS.
      * @param u current vertex
      * @param flow current flow send by parent function call
-     * @param start to keep track of next edge to be explored from {@code i}
+     * @param edgeIndexes to keep track of the index of next edge to be explored from {@code i}
      * @return the flow through the s-t path
      */
-    public int sendFlowByDFS(int u, int flow, int start[]) {
+    public int sendFlowByDFS(int u, int flow, int edgeIndexes[]) {
         // Sink reached
         if (u == t) {
             return flow;
         }
 
         // Traverse all adjacent edges one -by - one.
-        for (; start[u] < adj[u].size(); start[u]++) {
+        for (; edgeIndexes[u] < adj[u].size(); edgeIndexes[u]++) {
             // Pick next edge from adjacency list of u
-            Edge e = adj[u].get(start[u]);
+            Edge e = adj[u].get(edgeIndexes[u]);
 
             if (level[e.v] == level[u] + 1 && e.flow < e.capacity) {
                 // find minimum flow from u to t
                 int currentFlow = Math.min(flow, e.capacity - e.flow);
-                int tempFlow = sendFlowByDFS(e.v, currentFlow, start);
+                int tempFlow = sendFlowByDFS(e.v, currentFlow, edgeIndexes);
 
                 // flow is greater than zero
                 if (tempFlow > 0) {
@@ -153,17 +153,16 @@ public class DinicGraph {
 
         // Augment the flow while there is path from source to sink
         while (resetLayerLevelsByBFS(s, t) == true) {
-            // store how many edges are visited
-            // from V { 0 to V }
-            int[] start = new int[n + 1];
+            // store how many edges are visited from v { 0 to d(v) }
+            int[] edgeIndexes = new int[n + 1];
 
             // while flow is not zero in graph from S to D
-            int flow = sendFlowByDFS(s, Integer.MAX_VALUE, start);
+            int flow = sendFlowByDFS(s, Integer.MAX_VALUE, edgeIndexes);
 
             while (flow > 0) {
                 // Add path flow to overall flow
                 total += flow;
-                flow = sendFlowByDFS(s, Integer.MAX_VALUE, start);
+                flow = sendFlowByDFS(s, Integer.MAX_VALUE, edgeIndexes);
             }
         }
 
