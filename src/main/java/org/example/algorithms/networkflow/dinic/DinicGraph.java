@@ -44,7 +44,7 @@ public class DinicGraph {
     }
 
     /**
-     * add edge to the graph
+     * Add an edge, from the vertex {@code u} and to the vertex {@code v}.
      * @param u the number of vertex incident with the tail of the edge
      * @param v the number of vertex incident with the head of the edge
      * @param capacity the capacity of the edge
@@ -60,10 +60,11 @@ public class DinicGraph {
 
     /**
      * Update the levels on each node by BFS and finds if more flow can be sent from s to t,
-     * and return {@code true} if more flow can be sent from {@code s} to {@code t}.
+     * and return {@code true} if more flow can be sent from {@code s} to {@code t},
+     * or {@code false} otherwise.
      * @param s number of the source vertex
      * @param t number of the sink vertex
-     * @return {@code true} if more flow can be sent from {@code s} to {@code t}
+     * @return {@code true} if more flow can be sent from {@code s} to {@code t}, or {@code false} otherwise
      */
     public boolean updateLevelsByBFS(int s, int t) {
         for (int i = 0; i < n; i++) {
@@ -137,8 +138,8 @@ public class DinicGraph {
     }
 
     /**
-     * Returns maximum flow in graph
-     * @return maximum flow in graph
+     * Compute and returns the maximum flow in graph.
+     * @return computed maximum flow in graph
      */
     public int computeMaxFlow() {
         // Corner case
