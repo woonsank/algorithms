@@ -105,24 +105,24 @@ public class DinicGraph {
      * times for a single call of BFS.
      * @param u current vertex
      * @param flow current flow send by parent function call
-     * @param edgeIndexes to keep track of the index of next edge to be explored from {@code i}
+     * @param nextEdge to keep track of the index of next edge to be explored from {@code i}
      * @return the flow through the s-t path
      */
-    public int sendFlowByDFS(int u, int flow, int edgeIndexes[]) {
+    public int sendFlowByDFS(int u, int flow, int nextEdge[]) {
         // Sink reached
         if (u == t) {
             return flow;
         }
 
         // Traverse all adjacent edges one by one.
-        for (; edgeIndexes[u] < adj[u].size(); edgeIndexes[u]++) {
+        for (; nextEdge[u] < adj[u].size(); nextEdge[u]++) {
             // Pick next edge from adjacency list of u
-            Edge e = adj[u].get(edgeIndexes[u]);
+            Edge e = adj[u].get(nextEdge[u]);
 
             if (level[e.v] == level[u] + 1 && e.flow < e.capacity) {
                 // find minimum flow from u to t
                 int curAvailFlow = Math.min(flow, e.capacity - e.flow);
-                int extraFlow = sendFlowByDFS(e.v, curAvailFlow, edgeIndexes);
+                int extraFlow = sendFlowByDFS(e.v, curAvailFlow, nextEdge);
 
                 // flow is greater than zero
                 if (extraFlow > 0) {
@@ -154,10 +154,10 @@ public class DinicGraph {
         // Augment the flow while there is path from source to sink
         while (resetLayerLevelsByBFS(s, t) == true) {
             // store how many edges are visited from v { 0 to d(v) }
-            int[] edgeIndexes = new int[n + 1];
+            int[] nextEdge = new int[n + 1];
             int flow;
             // while flow is not zero in graph from source to sink
-            while ((flow = sendFlowByDFS(s, Integer.MAX_VALUE, edgeIndexes)) > 0) {
+            while ((flow = sendFlowByDFS(s, Integer.MAX_VALUE, nextEdge)) > 0) {
                 // Add path flow to overall flow
                 total += flow;
             }
